@@ -37,24 +37,16 @@ namespace BookManager
             {
                 cmd.CommandText = "SELECT * FROM BookTable";
 
-                //DataAdapter와 DataSet으로 DB table 불러오기
-                //DataSet은 메모리상의 하나의 DB 객체이며 DataTable은 메모리상의 하나의 테이블 객체
                 SqlDataAdapter da = new SqlDataAdapter(cmd); //select 구문이 들어감
                 ds = new DataSet();
                 da.Fill(ds, "BookTable");
 
-                dt_book = ds.Tables[0]; //select 결과값을 DataTable에 넣는다.
-                //dataGridView에 DB에서 가져온 데이터 입력하기
-                //dataGridView_BookManager.DataSource = ds;
-                //dataGridView_BookManager.DataMember = "BookTable";
+                dt_book = ds.Tables[0];
 
             }
             else
             {
                 cmd.CommandText = "SELECT * FROM BookTable Where Isbn = " + Isbn;
-
-                //DataAdapter와 DataSet으로 DB table 불러오기
-                //DataSet은 메모리상의 하나의 DB 객체이며 DataTable은 메모리상의 하나의 테이블 객체
                 SqlDataAdapter da = new SqlDataAdapter(cmd); //select 구문이 들어감
                 ds = new DataSet();
                 da.Fill(ds, "BookTable");
@@ -83,9 +75,7 @@ namespace BookManager
                 da.Fill(ds, "UserTable");
 
                 dt_user = ds.Tables[0]; //select 결과값을 DataTable에 넣는다.
-                //dataGridView에 DB에서 가져온 데이터 입력하기
-                //dataGridView_UserManager.DataSource = ds;
-                //dataGridView_UserManager.DataMember = "UserTable";
+                
 
             }
             else
@@ -116,10 +106,6 @@ namespace BookManager
                 string sqlcommand;
                 if (doBorrow) //대출
                 {
-                    //User Id를 이용하여 User 값들을 가져온다. 그리드뷰값을 가져올 수도 있지만, 그 것보다는 DB에서 UserId를 이용하여 조회를 하는 것이 더 안전한 것 같다.
-                    //ex) user쪽 gridview에서 userid가 2인 것을 선택해놓고, textbox에는 1을 입력하는 경우에는 textbox에 적힌 1의 user가 책을 빌렸다고 봐야하기 때문...
-
-                    //dt.Rows[0]["CarNumber"].ToString();
                     string userName = dt_user.Rows[0]["Name"].ToString();
                     sqlcommand = "Update BookTable set UserId = @p1, UserName = @p2, isBorrowed = 1, BorrowedAt = @p3 where Isbn = @p4";
 
@@ -155,16 +141,12 @@ namespace BookManager
             {
                 cmd.CommandText = "SELECT Isbn, Name, Publisher, Page, UserId, isBorrowed, BorrowedAt FROM BookTable";
 
-                //DataAdapter와 DataSet으로 DB table 불러오기
-                //DataSet은 메모리상의 하나의 DB 객체이며 DataTable은 메모리상의 하나의 테이블 객체
                 SqlDataAdapter da = new SqlDataAdapter(cmd); //select 구문이 들어감
                 ds = new DataSet();
                 da.Fill(ds, "BookTable");
 
                 dt_book = ds.Tables[0]; //select 결과값을 DataTable에 넣는다.
-                //dataGridView에 DB에서 가져온 데이터 입력하기
-                //dataGridView_book.DataSource = ds;
-                //dataGridView_book.DataMember = "BookTable";
+               
 
             }
             else
@@ -194,8 +176,6 @@ namespace BookManager
 
                 cmd.Connection = conn;
                 cmd.CommandType = CommandType.Text;
-                //Column 명은 별도의 파라메터 형태로 선언함
-                //SQL Injection을 방지하고자 함(SQL Injection : 유효하지 않은 데이터를 이용한 공격) 예: +나 ' 기호를 이용한 공격
                 cmd.Parameters.AddWithValue("@p1", isbn);
                 cmd.Parameters.AddWithValue("@p2", bookName);
                 cmd.Parameters.AddWithValue("@p3", publisher);
@@ -274,9 +254,6 @@ namespace BookManager
                 //Isbn, Name, Publisher, Page,
                 if (isRemove)
                 {
-                    //sql server management studio에서 userid와 id를 외래키로 지정하였고, 관계를 정하였음.
-                    //따라서 만약 해당 사용자를 삭제하면 userid 부분은 null이 된다.
-                    //나머지 부분들은 여기서 수동으로 변경해준다.
                     sqlcommand = "Update BookTable set UserName = null, isBorrowed = 0, BorrowedAt = null where UserId = @p1";
                     cmd.Parameters.AddWithValue("@p1", id);
                 }
@@ -358,8 +335,6 @@ namespace BookManager
 
                 cmd.Connection = conn;
                 cmd.CommandType = CommandType.Text;
-                //Column 명은 별도의 파라메터 형태로 선언함
-                //SQL Injection을 방지하고자 함(SQL Injection : 유효하지 않은 데이터를 이용한 공격) 예: +나 ' 기호를 이용한 공격
                 cmd.Parameters.AddWithValue("@p1", id);
                 cmd.Parameters.AddWithValue("@p2", name);
                 cmd.CommandText = sqlcommand;
